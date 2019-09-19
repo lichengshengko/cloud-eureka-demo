@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      routes:
+        - id: provider-order
+          uri: lb://PROVIDER-ORDER
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=1
+        - id: customer-order
+          uri: lb://CUSTOMER-ORDER
+          predicates:
+            - Path=/customer/**
+          filters:
+            - StripPrefix=1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6001/eureka/
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+
+
+
